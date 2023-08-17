@@ -19,7 +19,7 @@ class Food(models.Model):
     description = models.TextField()
     price = models.FloatField()
     image = models.ImageField()
-    category = models.ForeignKey(Category, related_name='foods_categories', on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, related_name='category_foods', on_delete=models.CASCADE)
     is_active = models.BooleanField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
