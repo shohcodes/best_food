@@ -4,7 +4,8 @@ from apps.users.models import TelegramUser, User
 
 
 class StatusChoices(models.Choices):
-    pass
+    DELIVERED = ('delivered',)
+    NOT_DELIVERED = ('not_delivered',)
 
 
 class Order(models.Model):

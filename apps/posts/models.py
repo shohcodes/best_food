@@ -8,7 +8,7 @@ class StatusChoices(models.TextChoices):
 class Post(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField()
-    image = models.ImageField()
+    images = models.ImageField()
     status = models.CharField(max_length=30, choices=StatusChoices.choices)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
