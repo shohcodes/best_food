@@ -23,9 +23,9 @@ class User(models.Model):
 
 
 class TelegramUser(models.Model):
-    chat_id = models.IntegerField()
-    phone_number = models.CharField(max_length=13)
     fullname = models.CharField(max_length=244)
+    phone_number = models.CharField(max_length=13)
+    chat_id = models.IntegerField()
     role = models.CharField(max_length=11, choices=RoleChoices.choices)
     is_blocked = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
