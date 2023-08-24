@@ -2,8 +2,8 @@ from django.db import models
 
 
 class StatusChoices(models.TextChoices):
-    AVAILABLE = ('available',)
-    UNAVAILABLE = ('unavailable',)
+    AVAILABLE = ('available', 'Available')
+    UNAVAILABLE = ('unavailable', 'Unavailable')
 
 
 class Post(models.Model):
