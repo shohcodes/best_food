@@ -5,7 +5,6 @@ from apps.users.models import User, TelegramUser
 class UserListSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = '__all__'
         exclude = ['created_at', 'updated_at']
 
 
