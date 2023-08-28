@@ -17,7 +17,6 @@ class UserDetailSerializer(serializers.ModelSerializer):
 class TelegramUserListSerializer(serializers.ModelSerializer):
     class Meta:
         model = TelegramUser
-        fields = '__all__'
         exclude = ['created_at', 'updated_at']
 
 
