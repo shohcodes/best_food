@@ -9,4 +9,6 @@ class PostStatusFilter(BaseFilterBackend):
                 queryset = queryset.filter(status='available')
             elif status == '0':
                 queryset = queryset.filter(status='unavailable')
+            else:
+                return []
         return queryset
