@@ -6,7 +6,6 @@ from apps.posts.models import Post
 class PostListSerializer(ModelSerializer):
     class Meta:
         model = Post
-        fields = '__all__'
         exclude = ['created_at', 'updated_at']
 
 
