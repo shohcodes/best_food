@@ -1,4 +1,3 @@
-from rest_framework.exceptions import ValidationError
 from rest_framework.filters import BaseFilterBackend
 
 
