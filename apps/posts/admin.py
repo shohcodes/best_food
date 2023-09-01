@@ -3,14 +3,14 @@ from django.contrib import admin
 from apps.posts.models import Post
 
 
-@admin.action(description='Make post available')
+@admin.action(description='Mark as sent')
 def make_available(modeladmin, request, queryset):
-    queryset.update(status='available')
+    queryset.update(status='sent')
 
 
-@admin.action(description='Make post unavailable')
+@admin.action(description='Mark as not sent')
 def make_unavailable(modeladmin, request, queryset):
-    queryset.update(status='unavailable')
+    queryset.update(status='not_sent')
 
 
 class PostAdmin(admin.ModelAdmin):
