@@ -2,9 +2,9 @@ from django.db import models
 
 
 class RoleChoices(models.TextChoices):
-    ADMIN = ('admin',)
-    ORDER_TAKER = ('order_taker',)
-    DELIVERER = ('deliverer',)
+    ADMIN = ('admin', 'Admin')
+    ORDER_TAKER = ('operator', 'Operator')
+    DELIVERER = ('deliverer', 'Kuryer')
 
 
 class User(models.Model):
@@ -26,8 +26,8 @@ class TelegramUser(models.Model):
     fullname = models.CharField(max_length=244)
     phone_number = models.CharField(max_length=13)
     chat_id = models.IntegerField()
-    role = models.CharField(max_length=11, choices=RoleChoices.choices)
     is_blocked = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
