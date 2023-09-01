@@ -9,7 +9,7 @@ class StatusChoices(models.TextChoices):
 class Post(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField()
-    images = models.ImageField()
+    images = models.ImageField(upload_to='posts_images/')
     status = models.CharField(max_length=30, choices=StatusChoices.choices, default=StatusChoices.NOT_SENT)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
