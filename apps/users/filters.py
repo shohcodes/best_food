@@ -9,11 +9,11 @@ class UserRoleFilter(BaseFilterBackend):
         return queryset
 
 
-class TelegramUserRoleFilter(BaseFilterBackend):
+class TelegramUserIsVerifiedFilter(BaseFilterBackend):
     def filter_queryset(self, request, queryset, view):
-        role = request.query_params.get('role')
-        if role:
-            queryset = queryset.filter(role=role)
+        is_verified = request.query_params.get('is_verified')
+        if is_verified:
+            queryset = queryset.filter(is_verified=is_verified)
         return queryset
 
 
