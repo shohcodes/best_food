@@ -36,24 +36,24 @@ def unblock_selected(modeladmin, request, queyset):
 
 class TelegramUserAdmin(admin.ModelAdmin):
     actions = [block_selected, unblock_selected]
-    list_display = ['fullname', 'role', 'chat_id', 'is_blocked']
+    list_display = ['fullname', 'is_verified', 'chat_id', 'is_blocked']
     search_fields = ['fullname', 'chat_id']
-    list_filter = ['role', 'is_blocked']
+    list_filter = ['is_verified', 'is_blocked']
     fieldsets = [
         (
             'Personal Information',
             {
-                'fields': ['fullname', 'chat_id', 'role']
+                'fields': ['fullname', 'chat_id']
             }
         ),
         (
             'Status',
             {
-                'fields': ['is_blocked']
+                'fields': ['is_verified', 'is_blocked']
             }
         ),
         (
-            'Contact',
+            'Contacts',
             {
                 'fields': ['phone_number']
             }
