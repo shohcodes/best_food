@@ -2,15 +2,15 @@ from django.db import models
 
 
 class StatusChoices(models.TextChoices):
-    AVAILABLE = ('available', 'Available')
-    UNAVAILABLE = ('unavailable', 'Unavailable')
+    SENT = ('sent', 'Yuborilgan')
+    NOT_SENT = ('not_sent', 'Yuborilmagan')
 
 
 class Post(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField()
     images = models.ImageField()
-    status = models.CharField(max_length=30, choices=StatusChoices.choices)
+    status = models.CharField(max_length=30, choices=StatusChoices.choices, default=StatusChoices.NOT_SENT)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
