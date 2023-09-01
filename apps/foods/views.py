@@ -1,8 +1,8 @@
 from rest_framework.viewsets import ModelViewSet
 
 from apps.foods.filters import FoodStatusFilter
-from apps.foods.models import Food
-from apps.foods.serializers import FoodDetailSerializer, FoodListSerializer
+from apps.foods.models import Food, Category
+from apps.foods.serializers import FoodDetailSerializer, FoodListSerializer, CategoryListSerializer
 
 
 class FoodViewSet(ModelViewSet):
@@ -14,3 +14,8 @@ class FoodViewSet(ModelViewSet):
         if self.action == 'list':
             return FoodListSerializer
         return self.serializer_class
+
+
+class CategoryViewSet(ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategoryListSerializer
