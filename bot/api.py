@@ -48,5 +48,30 @@ async def get_foods_of_category_api(id):
     return response.json()
 
 
+async def get_food_photo(id):
+    response = requests.get(f'http://127.0.0.1:8000/foods/{id}/')
+    return requests.get(response.json()['image']).content
+
+
+async def get_food_detail_api(id):
+    response = requests.get(f'http://127.0.0.1:8000/foods/{id}/')
+    return response.json()
+
+
+async def set_photo_caption_api(id):
+    text = ""
+    response = await get_food_detail_api(id)
+    try:
+
+        text += response['name']
+        text += '\n\n'
+        text += str(response['price'])
+        text += '\n\n'
+        text += response['description']
+    except KeyError as e:
+        text += 'not content'
+    return text
+
+
 if __name__ == '__main__':
-    print(get_foods_of_category_api(1))
+    print(set_photo_caption_api(5))
