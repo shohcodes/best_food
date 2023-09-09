@@ -1,3 +1,4 @@
+from rest_framework.generics import ListAPIView
 from rest_framework.viewsets import ModelViewSet
 
 from apps.foods.filters import FoodStatusFilter
@@ -19,3 +20,11 @@ class FoodViewSet(ModelViewSet):
 class CategoryViewSet(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategoryListSerializer
+
+
+class FoodListByCategory(ListAPIView):
+    serializer_class = FoodDetailSerializer
+
+    def get_queryset(self):
+        category_id = self.kwargs['id']
+        return Food.objects.filter(category__id=category_id)
