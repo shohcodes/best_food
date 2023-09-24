@@ -1,16 +1,16 @@
 import logging
 import os
-import requests
+
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 from dotenv import load_dotenv
 
-from bot.api import set_photo_caption_api
 import api
 import texts
-from bot.keyboards import main_menu_buttons, menu_button, foods_button, food_footer_button
+from bot.api import set_photo_caption_api
+from bot.keyboards import main_menu_buttons, menu_button, foods_button, food_footer_button, basket_button
 
 load_dotenv()
 
@@ -20,11 +20,10 @@ bot = Bot(token=os.getenv('TOKEN'))
 dp = Dispatcher(bot=bot, storage=MemoryStorage())
 
 
-@dp.message_handler(commands='start')
+@dp.message_handler(commands='start', state='*')
 async def start_handler(message: types.Message, state: FSMContext):
     ids = await api.get_all_chat_ids_api()
     if message.from_user.id in ids:
-        # await state.set_state('main_menu')
         await message.answer(texts.CHOOSE_MENU, reply_markup=await main_menu_buttons())
         await state.set_state('one_menu')
     else:
@@ -54,12 +53,6 @@ async def register_handler(message: types.Message, state: FSMContext):
     await start_handler(message, state)
     await api.register_api(fullname, number, message.from_user.id)
     await state.finish()
-
-
-# @dp.message_handler(state='main_menu')
-# async def main_menu_handler(message: types.Message, state: FSMContext):
-# await message.answer(texts.CHOOSE_MENU, reply_markup=await main_menu_buttons())
-# await state.set_state('one_menu')
 
 
 @dp.message_handler(Text('🍽️ Menyu'), state='one_menu')
@@ -107,32 +100,62 @@ async def food_detail_handler(callback: types.CallbackQuery, state: FSMContext):
         await menu_handler(callback.message, state)
     else:
         id = callback.data.split('_')[1]
+        await state.update_data(food_id=id)
         await bot.send_photo(callback.message.chat.id, photo=await api.get_food_photo(id),
                              reply_markup=await food_footer_button(current_number),
                              caption=await set_photo_caption_api(id))
     await state.set_state('food_footer')
 
 
-@dp.callback_query_handler(lambda callback_query: callback_query.data in ['minus', 'plus', 'back'], state='food_footer')
+@dp.callback_query_handler(lambda callback_query: callback_query.data in ['minus', 'plus', 'back', 'add_to_basket'],
+                           state='food_footer')
 async def handle_plus_minus_buttons(callback_query: types.CallbackQuery, state: FSMContext):
-    data = await state.get_data()
-    current_number = data.get('current_number', 1)
+    try:
+        data = await state.get_data()
+        current_number = data.get('current_number', 1)
+        user = await api.get_one_users_id_api(callback_query.message.chat.id)
+        food_id = data.get('food_id')
+        if callback_query.data == 'add_to_basket':
+            await api.add_to_basket_api(int(user), int(current_number), int(food_id))
+            await callback_query.message.answer('Savatga qoshildi✅')
+            await bot.delete_message(chat_id=callback_query.message.chat.id,
+                                     message_id=callback_query.message.message_id)
+            await menu_handler(callback_query.message, state)
+        elif callback_query.data == 'back':
+            await bot.delete_message(chat_id=callback_query.message.chat.id,
+                                     message_id=callback_query.message.message_id)
+            await menu_handler(callback_query.message, state)
 
-    if callback_query.data == 'back':
-        await bot.delete_message(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id)
-        await menu_handler(callback_query.message, state)
+        elif callback_query.data == 'plus':
+            current_number += 1
 
-    elif callback_query.data == 'plus':
-        current_number += 1
-    elif callback_query.data == 'minus':
-        current_number = max(1, current_number - 1)
+        elif callback_query.data == 'minus':
+            current_number = max(1, current_number - 1)
 
-    await state.update_data(current_number=current_number)
-    updated_keyboard = await food_footer_button(current_number)
+        await state.update_data(current_number=current_number)
+        updated_keyboard = await food_footer_button(current_number)
 
-    await bot.edit_message_reply_markup(chat_id=callback_query.message.chat.id,
-                                        message_id=callback_query.message.message_id,
-                                        reply_markup=updated_keyboard)
+        await bot.edit_message_reply_markup(chat_id=callback_query.message.chat.id,
+                                            message_id=callback_query.message.message_id,
+                                            reply_markup=updated_keyboard)
+    except Exception:
+        pass
+
+
+@dp.message_handler(Text('🛒 Savat'), state='one_menu')
+async def basket_handler(message: types.Message, state: FSMContext):
+    await message.answer(await api.get_basket_summary(message.from_user.id), reply_markup=await basket_button())
+    await state.set_state('basket_state')
+
+
+@dp.callback_query_handler(state='basket_state')
+async def confirm_or_empty_basket(callback: types.CallbackQuery, state: FSMContext):
+    if callback.data == 'empty_basket':
+        await api.empty_basket(callback.message.chat.id)
+        await callback.message.answer('🛒✅ Savat bo`shatildi')
+        await menu_handler(callback.message, state)
+    else:
+        await callback.message.answer('soon....')
 
 
 if __name__ == '__main__':
