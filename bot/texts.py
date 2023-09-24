@@ -20,3 +20,6 @@ ABOUT_US_TEXT = ('Biz O`zbekiston bozorida 1 yildan beri faoliyat yuritamiz va b
                  'albatta tatib ko`rishizni tavsiya qilamiz va buyurtmangizga tovuq go`shtidan yangiliklarimizni'
                  ' qo`shishni unutmang!\n\n Yetkazib berish xizmati: 127.0.0.1:8000'
                  )
+ADD_TO_BASKET = '🛒 Savatga qo`shish'
+EMPTY_BASKET = '🫗 Savatni boshatish'
+CONFIRM = '✅ Buyutmani rasmiylashtirish'
