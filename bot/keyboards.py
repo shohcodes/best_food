@@ -37,16 +37,18 @@ async def back_button():
     return inline_keyboard
 
 
-# async def food_detail_button(id):
-#     foods_detail = await api.get_food_detail_api(id)
-#     inline_keyboard = InlineKeyboardMarkup(row_width=2)
-#     inline_keyboard.add(InlineKeyboardButton(food_detail['']) for food_detail in foods_detail)
-
 async def food_footer_button(current_number):
     inline_keyboard = InlineKeyboardMarkup()
     inline_keyboard.add(InlineKeyboardButton('➖', callback_data='minus'),
                         InlineKeyboardButton(str(current_number), callback_data='number'),
                         InlineKeyboardButton('➕', callback_data='plus'),
-                        InlineKeyboardButton('🛒 Savatga qo`shish', callback_data='add_to_basket'))
+                        InlineKeyboardButton(texts.ADD_TO_BASKET, callback_data='add_to_basket'))
     inline_keyboard.add(InlineKeyboardButton('⬅ Ortga', callback_data='back'))
     return inline_keyboard
+
+
+async def basket_button():
+    inline_button = InlineKeyboardMarkup(row_width=2)
+    inline_button.add(InlineKeyboardButton(texts.EMPTY_BASKET, callback_data='empty_basket'),
+                      InlineKeyboardButton(texts.CONFIRM, callback_data='confirm'))
+    return inline_button
