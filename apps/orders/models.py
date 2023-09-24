@@ -5,6 +5,15 @@ from apps.users.models import TelegramUser, User
 from apps.orders.choices import StatusChoices, OrderTypeChoices, PaymentTypeChoices
 
 
+class Basket(models.Model):
+    telegram_user = models.ForeignKey(TelegramUser, related_name='telegram_users_basket', on_delete=models.CASCADE)
+    food = models.ForeignKey(Food, related_name='basket_foods', on_delete=models.CASCADE)
+    amount = models.IntegerField()
+
+    def __str__(self):
+        return self.telegram_user
+
+
 class Order(models.Model):
     total_price = models.FloatField()
     telegram_user = models.ForeignKey(TelegramUser, related_name='orders_tg_users', on_delete=models.CASCADE)
